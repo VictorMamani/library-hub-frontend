@@ -1,0 +1,91 @@
+.heading p {
+  color: var(--muted);
+  margin: 8px 0 28px;
+}
+.section {
+  padding: 20px;
+  border: 1px solid var(--border);
+  margin-top: 24px;
+}
+.sectionTitle {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+.sectionTitle h2 {
+  font-size: 1.125rem;
+  margin: 0;
+}
+.sectionTitle span {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 20px 0;
+}
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+.cover {
+  width: 56px;
+  flex-shrink: 0;
+}
+.info {
+  flex: 1;
+  min-width: 0;
+}
+.info h3 {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.info h3 a {
+  text-decoration: none;
+}
+.info p {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+.info .due {
+  color: var(--text);
+}
+.info .overdue {
+  color: #9b2424;
+}
+.empty {
+  padding: 24px 0 8px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.empty p {
+  margin: 0 0 16px;
+}
+.returned {
+  font-size: 0.75rem;
+  color: #155c3a;
+}
+@media (max-width: 580px) {
+  .row {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .row button {
+    width: 100%;
+  }
+  .section {
+    padding: 16px;
+  }
+}

@@ -1,0 +1,19 @@
+.profile {
+  max-width: 640px;
+  border: 1px solid var(--border);
+  padding: 28px;
+}
+.profile dl {
+  margin: 28px 0;
+  display: grid;
+  gap: 24px;
+}
+.profile dt {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  margin-bottom: 8px;
+}
+.profile dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
