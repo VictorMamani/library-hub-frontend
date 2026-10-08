@@ -19,6 +19,6 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
   },
-  { files: ['*.{ts,js}'], languageOptions: { globals: globals.node } },
+  { files: ['*.{ts,js}', 'scripts/**/*.mjs'], languageOptions: { globals: globals.node } },
   prettier,
 );

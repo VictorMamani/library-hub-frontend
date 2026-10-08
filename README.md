@@ -62,3 +62,15 @@ docker build --target production -t library-hub-frontend .
 ```
 
 Las variables `VITE_*` se entregan al navegador y no deben contener secretos.
+
+### Netlify
+
+Importar `VictorMamani/library-hub-frontend` desde GitHub, rama `main`. `netlify.toml` establece Node.js 22, el comando `npm run build:netlify` y la carpeta de publicación `dist`.
+
+En las variables del proyecto de Netlify, configurar `API_PROXY_TARGET` para la compilación con el origen HTTPS de producción de la API, por ejemplo `https://tu-api.vercel.app`, sin `/api` ni barra final. La compilación falla si falta la variable o su formato no es válido.
+
+El script genera `dist/_redirects`: primero reenvía `/api/*` al mismo prefijo de la API y después sirve `index.html` para las rutas de React Router. El navegador sigue llamando a `/api` desde el origen del frontend, lo que permite usar la cookie de sesión existente. `API_PROXY_TARGET` es una dirección pública y no debe contener credenciales.
+
+Configurar `APP_ORIGIN` en Vercel con el origen exacto del sitio de Netlify. Después de cambiar cualquiera de las variables, volver a desplegar el proyecto correspondiente. Los dominios de previews necesitan su propia configuración de origen; la configuración inicial corresponde al dominio estable de producción.
+
+Verificar `/api/health`, el registro/login, la sesión después de recargar una ruta como `/loans` y el cierre de sesión desde el sitio publicado.
