@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import type { Book } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useResource } from '../hooks/useResource';
-import { request } from '../services/api';
+import { useBorrowBook } from '../hooks/useBorrowBook';
 import { BookCover } from '../components/BookCover';
 import { ResourceState } from '../components/ResourceState';
 import backIcon from '../assets/back.svg';
@@ -12,34 +11,13 @@ import styles from './BookPage.module.css';
 export default function BookPage() {
   const { bookId } = useParams();
   const { user, initializing } = useAuth();
-  const navigate = useNavigate();
   const {
     data: book,
     loading,
     error,
     reload,
   } = useResource<Book>(`/books/${encodeURIComponent(bookId ?? '')}`);
-  const [busy, setBusy] = useState(false);
-  const [actionError, setActionError] = useState<string | null>(null);
-
-  async function borrow() {
-    if (!book) return;
-    setBusy(true);
-    setActionError(null);
-    try {
-      await request('/loans', { method: 'POST', body: JSON.stringify({ bookId: book.id }) }, true);
-      navigate('/loans', {
-        state: { notice: 'Préstamo registrado. Consulta aquí la fecha de devolución.' },
-      });
-    } catch (failure) {
-      setActionError(
-        failure instanceof Error ? failure.message : 'No se pudo registrar el préstamo.',
-      );
-      reload();
-    } finally {
-      setBusy(false);
-    }
-  }
+  const { busy, actionError, borrow } = useBorrowBook(book, reload);
 
   return (
     <>

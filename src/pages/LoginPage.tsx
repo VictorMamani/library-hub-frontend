@@ -1,43 +1,21 @@
-import { useState } from 'react';
-import type { FormEvent } from 'react';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { signIn, signUp } from '../services/api';
+import { Link, Navigate } from 'react-router-dom';
+import { useLoginForm } from '../hooks/useLoginForm';
 import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
-  const { user, initializing, sessionError } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [register, setRegister] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const candidate: unknown = (location.state as { from?: unknown } | null)?.from;
-  const destination =
-    typeof candidate === 'string' && candidate.startsWith('/') && !candidate.startsWith('//')
-      ? candidate
-      : '/loans';
-
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const values = new FormData(event.currentTarget);
-    const email = String(values.get('email') ?? '')
-      .trim()
-      .toLowerCase();
-    const password = String(values.get('password') ?? '');
-    setBusy(true);
-    setError(null);
-    try {
-      if (register) await signUp(String(values.get('name') ?? '').trim(), email, password);
-      else await signIn(email, password);
-      navigate(destination, { replace: true });
-    } catch (failure) {
-      setError(failure instanceof Error ? failure.message : 'No se pudo iniciar sesión.');
-    } finally {
-      setBusy(false);
-    }
-  }
+  const {
+    user,
+    initializing,
+    sessionError,
+    register,
+    busy,
+    error,
+    showPassword,
+    setShowPassword,
+    destination,
+    submit,
+    toggleMode,
+  } = useLoginForm();
 
   if (user && !initializing)
     return (
@@ -136,10 +114,7 @@ export default function LoginPage() {
         <button
           type="button"
           disabled={busy}
-          onClick={() => {
-            setRegister((value) => !value);
-            setError(null);
-          }}
+          onClick={toggleMode}
         >
           {register ? 'Iniciar sesión' : 'Crear una cuenta'}
         </button>
