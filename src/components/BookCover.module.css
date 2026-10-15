@@ -14,9 +14,14 @@
 .fallback {
   display: grid;
   justify-items: center;
-  gap: 12px;
+  gap: 6px;
   color: var(--muted);
-  font-size: 0.8125rem;
-  padding: 20px;
+  font-size: 0.75rem;
+  padding: 6px;
+  overflow-wrap: anywhere;
   text-align: center;
+}
+.fallback img {
+  width: 24px;
+  height: 24px;
 }

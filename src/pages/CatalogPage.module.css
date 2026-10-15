@@ -1,14 +1,14 @@
 .heading {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 .heading p {
   margin: 8px 0 0;
   color: var(--muted);
 }
 .searchPanel {
-  padding: 20px;
-  border: 1px solid var(--border);
-  margin-bottom: 28px;
+  padding: 0 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
 }
 .searchForm {
   display: flex;
@@ -27,12 +27,20 @@
 .searchInput input {
   padding-left: 44px;
 }
+.authorInput {
+  flex: 0 1 260px;
+  min-width: 0;
+}
+.filterDisclosure summary {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
 .filters {
   display: flex;
   gap: 20px;
   align-items: end;
   flex-wrap: wrap;
-  margin-top: 18px;
+  margin-top: 4px;
 }
 .filter {
   font-size: 0.8125rem;
@@ -42,10 +50,26 @@
   margin-top: 6px;
 }
 .resultCount {
-  margin: 0 0 12px auto;
+  margin: 0;
   font-size: 0.875rem;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
+}
+.resultsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.resultsHeader .resultsHeading {
+  margin-bottom: 0;
+}
+@media (max-width: 480px) {
+  .resultsHeader {
+    flex-direction: column;
+    gap: 6px;
+  }
 }
 .initialSelection {
   color: var(--muted);
@@ -54,12 +78,12 @@
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
 }
 .book {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
   min-width: 0;
   padding: 16px;
   border: 1px solid var(--border);
@@ -67,6 +91,15 @@
 }
 .coverLink {
   display: block;
+  grid-row: span 3;
+}
+.book > a:last-child {
+  grid-column: 2;
+}
+.resultsHeading {
+  margin: 0 0 18px;
+  font-size: 1.125rem;
+  scroll-margin-top: 16px;
 }
 .bookText {
   flex: 1;
@@ -95,15 +128,14 @@
 .available,
 .unavailable {
   padding: 3px 7px;
-  border: 1px solid var(--border);
 }
 .available {
-  color: #155c3a;
-  background: #f0f8f3;
+  color: var(--positive-text);
+  background: var(--positive-surface);
 }
 .unavailable {
-  color: #635c4c;
-  background: #f8f5ef;
+  color: var(--waiting-text);
+  background: var(--waiting-surface);
 }
 .pagination {
   margin-top: 28px;
@@ -125,7 +157,7 @@
 }
 @media (max-width: 760px) {
   .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
   }
   .filters {
     gap: 12px;
@@ -140,10 +172,13 @@
 }
 @media (max-width: 480px) {
   .searchPanel {
-    padding: 16px;
+    padding: 0 0 16px;
   }
   .searchForm {
     flex-direction: column;
+  }
+  .authorInput {
+    flex-basis: auto;
   }
   .grid {
     grid-template-columns: minmax(0, 1fr);
@@ -173,5 +208,27 @@
   }
   .pagination button {
     padding: 10px;
+  }
+}
+@media (min-width: 980px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .book {
+    grid-template-columns: 112px minmax(0, 1fr);
+  }
+}
+@media (min-width: 481px) and (max-width: 760px) {
+  .searchForm {
+    flex-wrap: wrap;
+  }
+  .searchInput {
+    flex-basis: 55%;
+  }
+  .authorInput {
+    flex: 1;
+  }
+  .searchForm > button {
+    width: 100%;
   }
 }

@@ -13,6 +13,7 @@ export function useLoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const candidate: unknown = (location.state as { from?: unknown } | null)?.from;
+  const catalog: unknown = (location.state as { catalog?: unknown } | null)?.catalog;
   const destination =
     typeof candidate === 'string' && candidate.startsWith('/') && !candidate.startsWith('//')
       ? candidate
@@ -30,7 +31,7 @@ export function useLoginForm() {
     try {
       if (register) await signUp(String(values.get('name') ?? '').trim(), email, password);
       else await signIn(email, password);
-      navigate(destination, { replace: true });
+      navigate(destination, { replace: true, state: { catalog } });
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : 'No se pudo iniciar sesión.');
     } finally {
@@ -52,6 +53,7 @@ export function useLoginForm() {
     showPassword,
     setShowPassword,
     destination,
+    catalog,
     submit,
     toggleMode,
   };

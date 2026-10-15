@@ -20,6 +20,20 @@
       content="Consulta el catálogo y gestiona tus préstamos en Library Hub, tu biblioteca universitaria."
     />
     <title>Library Hub | Biblioteca universitaria</title>
+    <script>
+      (() => {
+        let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        try {
+          const saved = localStorage.getItem('library-hub-theme');
+          if (saved === 'light' || saved === 'dark') theme = saved;
+        } catch {
+          // La preferencia del sistema sirve cuando no hay almacenamiento disponible.
+        }
+        document.documentElement.dataset.theme = theme;
+        document.querySelector('meta[name="theme-color"]').content =
+          theme === 'dark' ? '#181923' : '#ffffff';
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

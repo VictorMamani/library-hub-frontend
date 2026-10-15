@@ -11,11 +11,19 @@ interface Resource<T> {
 export function useResource<T>(path: string, authenticated = false) {
   const [state, setState] = useState<Resource<T>>({ path, data: null, error: null, loading: true });
   const [revision, setRevision] = useState(0);
-  const reload = useCallback(() => setRevision((value) => value + 1), []);
+  const reload = useCallback(() => {
+    setState((previous) => ({ ...previous, loading: true, error: null }));
+    setRevision((value) => value + 1);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
-    setState({ path, data: null, error: null, loading: true });
+    setState((previous) => ({
+      path,
+      data: previous.path === path ? previous.data : null,
+      error: null,
+      loading: true,
+    }));
     void request<T>(path, { signal: controller.signal }, authenticated)
       .then((data) => {
         if (!controller.signal.aborted) setState({ path, data, error: null, loading: false });

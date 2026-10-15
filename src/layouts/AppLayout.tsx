@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useRouteFocus } from '../hooks/useRouteFocus';
 import { ResourceState } from '../components/ResourceState';
+import { ThemeSwitcher } from '../components/ThemeSwitcher';
 import bookIcon from '../assets/book.svg';
 import styles from './AppLayout.module.css';
 
@@ -31,21 +32,24 @@ export default function AppLayout() {
             </span>
             Library Hub
           </Link>
-          <nav
-            className={styles.nav}
-            aria-label="Navegación principal"
-          >
-            <NavLink
-              to="/"
-              end
+          <div className={styles.controls}>
+            <nav
+              className={styles.nav}
+              aria-label="Navegación principal"
             >
-              Catálogo
-            </NavLink>
-            <NavLink to="/loans">Mi biblioteca</NavLink>
-            <NavLink to={user ? '/profile' : '/login'}>
-              {user ? 'Mi cuenta' : 'Iniciar sesión'}
-            </NavLink>
-          </nav>
+              <NavLink
+                to="/"
+                end
+              >
+                Catálogo
+              </NavLink>
+              <NavLink to="/loans">Mi biblioteca</NavLink>
+              <NavLink to={user ? '/profile' : '/login'}>
+                {user ? 'Mi cuenta' : 'Iniciar sesión'}
+              </NavLink>
+            </nav>
+            <ThemeSwitcher />
+          </div>
         </div>
       </header>
       <main

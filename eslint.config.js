@@ -19,6 +19,14 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
   },
-  { files: ['*.{ts,js}', 'scripts/**/*.mjs'], languageOptions: { globals: globals.node } },
+  {
+    files: ['*.{ts,js,cjs}', 'scripts/**/*.mjs', 'tests/**/*.cjs'],
+    languageOptions: { globals: globals.node },
+  },
+  { files: ['**/*.cjs'], rules: { '@typescript-eslint/no-require-imports': 'off' } },
+  {
+    files: ['src/**/*.test.{ts,tsx}', 'tests/**/*.ts'],
+    languageOptions: { globals: { ...globals.browser, ...globals.jest } },
+  },
   prettier,
 );

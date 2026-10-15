@@ -1,14 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import type { Book } from '../../types';
 import { BookCover } from '../BookCover';
 import styles from '../../pages/CatalogPage.module.css';
 
 export function BookCard({ book }: { book: Book }) {
+  const location = useLocation();
+  const state = { catalog: `${location.pathname}${location.search}` };
   return (
     <article className={styles.book}>
       <Link
         className={styles.coverLink}
         to={`/books/${book.id}`}
+        state={state}
         aria-label={`Ver ${book.title}`}
       >
         <BookCover
@@ -18,19 +21,29 @@ export function BookCard({ book }: { book: Book }) {
       </Link>
       <div className={styles.bookText}>
         <h2>
-          <Link to={`/books/${book.id}`}>{book.title}</Link>
+          <Link
+            to={`/books/${book.id}`}
+            state={state}
+          >
+            {book.title}
+          </Link>
         </h2>
         <p>{book.authors.join(', ') || 'Autor no disponible'}</p>
       </div>
       <div className={styles.bookMeta}>
         <span>{book.publicationYear ?? 'Fecha no disponible'}</span>
         <span className={book.available ? styles.available : styles.unavailable}>
-          {book.available ? 'Disponible' : 'Prestado'}
+          {book.available
+            ? 'Disponible'
+            : book.availability === 'reserved'
+              ? 'Reservado'
+              : 'Prestado'}
         </span>
       </div>
       <Link
         className="button secondary"
         to={`/books/${book.id}`}
+        state={state}
       >
         Ver detalles
       </Link>

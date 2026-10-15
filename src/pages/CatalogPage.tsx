@@ -1,4 +1,6 @@
 import { useCatalog } from '../hooks/useCatalog';
+import { usePageTitle } from '../hooks/usePageTitle';
+import { useResultsFocus } from '../hooks/useResultsFocus';
 import { BookCard } from '../components/catalog/BookCard';
 import { ResourceState } from '../components/ResourceState';
 import { CatalogFilters } from '../components/catalog/CatalogFilters';
@@ -7,6 +9,9 @@ import styles from './CatalogPage.module.css';
 export default function CatalogPage() {
   const catalog = useCatalog();
   const { page, data, loading, error, reload, update, pageCount, reset } = catalog;
+  usePageTitle('Catálogo');
+  const currentQuery = `${catalog.query}|${catalog.author}|${catalog.category}|${catalog.sort}|${page}`;
+  const results = useResultsFocus(currentQuery, loading);
 
   return (
     <>
@@ -15,6 +20,25 @@ export default function CatalogPage() {
         <p>Encuentra tu próxima lectura en la biblioteca universitaria.</p>
       </div>
       <CatalogFilters {...catalog} />
+      <div className={styles.resultsHeader}>
+        <h2
+          className={styles.resultsHeading}
+          ref={results}
+          tabIndex={-1}
+        >
+          Resultados del catálogo
+        </h2>
+        <p
+          className={styles.resultCount}
+          role="status"
+        >
+          {loading
+            ? 'Buscando libros…'
+            : data
+              ? `${data.total.toLocaleString('es-BO')} resultados`
+              : 'Catálogo no disponible'}
+        </p>
+      </div>
       {loading || error ? (
         <ResourceState
           loading={loading}
@@ -48,33 +72,32 @@ export default function CatalogPage() {
                 </button>
               </section>
             )}
-            {data.books.length > 0 && (
-              <nav
-                className={styles.pagination}
-                aria-label="Páginas del catálogo"
-              >
-                <button
-                  className="button secondary"
-                  disabled={page <= 1}
-                  onClick={() => update('page', String(page - 1))}
-                >
-                  Anterior
-                </button>
-                <span>
-                  Página {page} de {pageCount.toLocaleString('es-BO')}
-                </span>
-                <button
-                  className="button secondary"
-                  disabled={page >= pageCount}
-                  onClick={() => update('page', String(page + 1))}
-                >
-                  Siguiente
-                </button>
-              </nav>
-            )}
           </>
         )
       )}
+      <nav
+        className={styles.pagination}
+        aria-label="Páginas del catálogo"
+      >
+        <button
+          className="button secondary"
+          disabled={loading || page <= 1}
+          onClick={() => update('page', String(page - 1))}
+        >
+          Anterior
+        </button>
+        <span>
+          Página {page}
+          {data && ` de ${pageCount.toLocaleString('es-BO')}`}
+        </span>
+        <button
+          className="button secondary"
+          disabled={loading || !data || page >= pageCount}
+          onClick={() => update('page', String(page + 1))}
+        >
+          Siguiente
+        </button>
+      </nav>
     </>
   );
 }

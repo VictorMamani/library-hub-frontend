@@ -1,8 +1,10 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import type { Book } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useResource } from '../hooks/useResource';
-import { useBorrowBook } from '../hooks/useBorrowBook';
+import { usePageTitle } from '../hooks/usePageTitle';
+import { BookActions } from '../components/books/BookActions';
+import { ReadingStatus } from '../components/books/ReadingStatus';
 import { BookCover } from '../components/BookCover';
 import { ResourceState } from '../components/ResourceState';
 import backIcon from '../assets/back.svg';
@@ -10,6 +12,12 @@ import styles from './BookPage.module.css';
 
 export default function BookPage() {
   const { bookId } = useParams();
+  const location = useLocation();
+  const candidate: unknown = (location.state as { catalog?: unknown } | null)?.catalog;
+  const catalogPath =
+    typeof candidate === 'string' && (candidate === '/' || candidate.startsWith('/?'))
+      ? candidate
+      : '/';
   const { user, initializing } = useAuth();
   const {
     data: book,
@@ -17,13 +25,13 @@ export default function BookPage() {
     error,
     reload,
   } = useResource<Book>(`/books/${encodeURIComponent(bookId ?? '')}`);
-  const { busy, actionError, borrow } = useBorrowBook(book, reload);
+  usePageTitle(book?.title ?? 'Detalle del libro');
 
   return (
     <>
       <Link
         className={styles.back}
-        to="/"
+        to={catalogPath}
       >
         <img
           src={backIcon}
@@ -31,7 +39,7 @@ export default function BookPage() {
         />
         Volver al catálogo
       </Link>
-      {loading || error ? (
+      {!book && (loading || error) ? (
         <ResourceState
           loading={loading}
           error={error}
@@ -59,9 +67,39 @@ export default function BookPage() {
                   </div>
                   <div>
                     <dt>Disponibilidad</dt>
-                    <dd>{book.available ? 'Un ejemplar disponible' : 'Ejemplar prestado'}</dd>
+                    <dd>
+                      {book.available
+                        ? 'Un ejemplar disponible'
+                        : book.availability === 'reserved'
+                          ? 'Ejemplar reservado'
+                          : 'Ejemplar prestado'}
+                    </dd>
                   </div>
                 </dl>
+                {user ? (
+                  <BookActions
+                    key={book.id}
+                    book={book}
+                    reload={reload}
+                  />
+                ) : (
+                  <section
+                    className={styles.actions}
+                    aria-label="Préstamo del libro"
+                  >
+                    <h2>Préstamo</h2>
+                    <p>
+                      Un ejemplar académico por obra. Plazo de préstamo: {book.loanDays ?? 21} días.
+                    </p>
+                    <Link
+                      className="button"
+                      to="/login"
+                      state={{ from: `/books/${book.id}`, catalog: catalogPath }}
+                    >
+                      {initializing ? 'Acceder a mi cuenta' : 'Iniciar sesión para tomar prestado'}
+                    </Link>
+                  </section>
+                )}
                 {book.subjects.length > 0 && (
                   <div className={styles.subjects}>
                     <h2>Temas</h2>
@@ -74,47 +112,24 @@ export default function BookPage() {
                 )}
               </div>
             </section>
+            {error && (
+              <ResourceState
+                error={error}
+                retry={reload}
+              />
+            )}
+            {user && (
+              <ReadingStatus
+                key={book.id}
+                bookId={book.id}
+              />
+            )}
             <section className={styles.description}>
               <h2>Acerca de este libro</h2>
               <p>
                 {book.description ||
                   'La fuente del catálogo no incluye una descripción para este libro.'}
               </p>
-            </section>
-            <section
-              className={styles.actions}
-              aria-label="Préstamo del libro"
-            >
-              {actionError && (
-                <p
-                  role="alert"
-                  className="error"
-                >
-                  {actionError}
-                </p>
-              )}
-              {user ? (
-                <button
-                  className="button"
-                  disabled={!book.available || busy}
-                  onClick={() => void borrow()}
-                >
-                  {busy
-                    ? 'Registrando préstamo…'
-                    : book.available
-                      ? 'Tomar prestado'
-                      : 'Ejemplar no disponible'}
-                </button>
-              ) : (
-                <Link
-                  className="button"
-                  to="/login"
-                  state={{ from: `/books/${book.id}` }}
-                >
-                  {initializing ? 'Acceder a mi cuenta' : 'Iniciar sesión para tomar prestado'}
-                </Link>
-              )}
-              <p>Consulta el vencimiento de cada préstamo en Mi biblioteca.</p>
             </section>
           </>
         )

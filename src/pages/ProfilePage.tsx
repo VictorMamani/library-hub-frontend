@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLogout } from '../hooks/useLogout';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { ProfilePhotoEditor } from '../components/profile/ProfilePhotoEditor';
 import styles from './ProfilePage.module.css';
 
 export default function ProfilePage() {
+  usePageTitle('Mi cuenta');
   const { user } = useAuth();
   const { busy, error, logout } = useLogout();
   return (

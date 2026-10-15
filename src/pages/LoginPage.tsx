@@ -1,5 +1,6 @@
 import { Link, Navigate } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
+import { usePageTitle } from '../hooks/usePageTitle';
 import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
@@ -13,14 +14,17 @@ export default function LoginPage() {
     showPassword,
     setShowPassword,
     destination,
+    catalog,
     submit,
     toggleMode,
   } = useLoginForm();
+  usePageTitle(register ? 'Crear cuenta' : 'Iniciar sesión');
 
   if (user && !initializing)
     return (
       <Navigate
         to={destination}
+        state={{ catalog }}
         replace
       />
     );

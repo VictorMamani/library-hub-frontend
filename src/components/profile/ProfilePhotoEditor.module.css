@@ -26,7 +26,7 @@
 }
 .photo:hover:not(:disabled) {
   border-color: var(--text);
-  background: #ece9f8;
+  background: var(--surface-muted-hover);
 }
 .photo img {
   display: block;
@@ -54,8 +54,8 @@
   margin-bottom: 0;
 }
 .editor .error {
-  color: #912424;
+  color: var(--error-text);
 }
 .editor .notice {
-  color: #155c3a;
+  color: var(--positive-text);
 }

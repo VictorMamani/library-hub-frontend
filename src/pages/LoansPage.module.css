@@ -3,8 +3,8 @@
   margin: 8px 0 28px;
 }
 .section {
-  padding: 20px;
-  border: 1px solid var(--border);
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
   margin-top: 24px;
 }
 .sectionTitle {
@@ -18,6 +18,7 @@
 .sectionTitle h2 {
   font-size: 1.125rem;
   margin: 0;
+  scroll-margin-top: 16px;
 }
 .sectionTitle span {
   font-variant-numeric: tabular-nums;
@@ -61,12 +62,16 @@
 }
 .info .due {
   color: var(--text);
+  font-size: 0.9375rem;
+  font-weight: 600;
 }
 .info .overdue {
-  color: #9b2424;
+  color: var(--error-text);
+  font-size: 0.9375rem;
+  font-weight: 600;
 }
 .empty {
-  padding: 24px 0 8px;
+  padding: 12px 0 8px;
   color: var(--muted);
   font-size: 0.875rem;
 }
@@ -75,7 +80,33 @@
 }
 .returned {
   font-size: 0.75rem;
-  color: #155c3a;
+  color: var(--positive-text);
+}
+.help {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.readingFilter {
+  display: block;
+  max-width: 280px;
+  margin: 20px 0 12px;
+  font-size: 0.875rem;
+}
+.readingFilter select {
+  margin-top: 8px;
+}
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  font-size: 0.875rem;
 }
 @media (max-width: 580px) {
   .row {
@@ -86,6 +117,12 @@
     width: 100%;
   }
   .section {
-    padding: 16px;
+    padding: 16px 0;
+  }
+  .rowActions {
+    width: 100%;
+  }
+  .pagination {
+    flex-wrap: wrap;
   }
 }
